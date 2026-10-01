@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информатика 6-сынып | Интерактивті Тест</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text: #1F2937;
+            --correct: #10B981;
+            --wrong: #EF4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 750px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #6B7280;
+            font-size: 15px;
+        }
+
+        /* Нұсқа таңдау терезесі */
+        .variant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-variant {
+            background: #EEF2FF;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-variant:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Тест терезесі */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #E5E7EB;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: #F9FAFB;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: var(--primary);
+            background-color: #EEF2FF;
+        }
+
+        .option-btn.correct {
+            background-color: #D1FAE5 !important;
+            border-color: var(--correct) !important;
+            color: #065F46;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong {
+            background-color: #FEE2E2 !important;
+            border-color: var(--wrong) !important;
+            color: #991B1B;
+        }
+
+        /* Эмоция фидбегі */
+        .feedback-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            font-size: 18px;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .feedback-emoji {
+            font-size: 40px;
+        }
+
+        .next-btn {
+            margin-top: 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            display: none;
+        }
+
+        .next-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Соңғы нәтиже терезесі */
+        .result-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .result-emoji {
+            font-size: 80px;
+            margin-bottom: 10px;
+        }
+
+        .score-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-restart {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-home {
+            background-color: #6B7280;
+            color: white;
+        }
+
+        .hide { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>💻 Информатика 6-сынып</h1>
+        <p class="subtitle">Интерактивті білім тексеру сайты</p>
+    </header>
+
+    <!-- 1. НҰСҚА ТАҢДАУ ТЕРЕЗЕСІ -->
+    <div id="variant-screen">
+        <h2 style="text-align: center; font-size: 20px; margin-bottom: 15px;">Тест нұсқасын таңдаңыз:</h2>
+        <div class="variant-grid">
+            <button class="btn-variant" onclick="startQuiz(1)">1-нұсқа</button>
+            <button class="btn-variant" onclick="startQuiz(2)">2-нұсқа</button>
+            <button class="btn-variant" onclick="startQuiz(3)">3-нұсқа</button>
+            <button class="btn-variant" onclick="startQuiz(4)">4-нұсқа</button>
+            <button class="btn-variant" onclick="startQuiz(5)">5-нұсқа</button>
+        </div>
+    </div>
+
+    <!-- 2. ТЕСТ СҰРАҚТАРЫ ТЕРЕЗЕСІ -->
+    <div id="quiz-screen" class="hide">
+        <div class="quiz-header">
+            <span id="variant-title">1-нұсқа</span>
+            <span id="question-count">Сұрақ: 1/10</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="question-text" id="question-text">Сұрақ мәтіні...</div>
+        <div class="options-list" id="options-container"></div>
+
+        <div class="feedback-box" id="feedback-box">
+            <div class="feedback-emoji" id="feedback-emoji">🥳</div>
+            <div>
+                <strong id="feedback-title">Өте тамаша!</strong>
+                <p id="feedback-desc" style="font-size: 14px; margin-top: 3px;"></p>
+            </div>
+        </div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Келесі сұрақ ➔</button>
+    </div>
+
+    <!-- 3. НӘТИЖЕ ТЕРЕЗЕСІ -->
+    <div id="result-screen" class="result-screen">
+        <div class="result-emoji" id="result-emoji">🏆</div>
+        <h2>Тест аяқталды!</h2>
+        <p class="score-text" id="score-text">Сіз 10-нан 8 ұпай жинадыңыз (80%)</p>
+        <div class="grade-badge" id="grade-badge">Өте жақсы!</div>
+
+        <div class="btn-group">
+            <button class="action-btn btn-restart" onclick="restartCurrentVariant()">Осы нұсқаны қайта өту</button>
+            <button class="action-btn btn-home" onclick="showVariantScreen()">Басқа нұсқаны таңдау</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 50 СҰРАҚТАН ТҰРАТЫН БАЗА (5 НҰСҚА x 10 СҰРАҚ)
+    const quizData = {
+        1: [
+            { q: "Желіде бейтаныс адамның жеке деректерді (құпия сөз, ПИН-код) сұрауы неге жатады?", options: ["Интернеттегі алаяқтық", "Жылдам танысу", "Достық көмек", "Техникалық қолдау"], correct: 0, exp: "Жеке деректерді сұрау — алаяқтықтың басты белгісі!" },
+            { q: "«Деректер» дегеніміз не?", options: ["Өңделмеген, өңі жоқ фактілер мен цифрлар", "Терең түсінілген білім", "Компьютерлік бағдарлама", "Электронды пошта"], correct: 0, exp: "Деректер — бұл өңделмеген бастапқы фактілер." },
+            { q: "Жасанды интеллект (ЖИ) моделін сапалы оқыту үшін не қажет?", options: ["Тек мәтіндік файлдар", "Сапалы әрі үлкен көлемді деректер", "Интернет жылдамдығы", "Процессор түсі"], correct: 1, exp: "ЖИ модельдерінің дәлдігі оған берілетін деректер көлеміне байланысты." },
+            { q: "Компьютердің жедел жадысы (RAM) қандай қызмет атқарады?", options: ["Компьютер өшірілгенде де деректі сақтайды", "Бағдарламалар орындалу кезінде деректерді уақытша сақтайды", "Графиканы өңдейді", "Дыбысты шығарады"], correct: 1, exp: "RAM — тоққа тәуелді уақытша жады." },
+            { q: "Орталық процессордың жұмыс өнімділігін анықтайтын негізгі сипаттамалар:", options: ["Экран диагоналы мен салмағы", "Ядро саны мен тактілік жиілігі", "Диск көлемі", "Кабель ұзындығы"], correct: 1, exp: "Процессор өнімділігі ядро саны мен тактілік жиілігіне тікелей байланысты." },
+            { q: "Тұрақты сақтау құрылғысы (ROM / ТЖҚ) не үшін арналған?", options: ["Компьютерді іске қосатын BIOS бағдарламасын сақтау", "Ойындарды орнату", "Интернетке қосылу", "Мәтін тергіш"], correct: 0, exp: "ROM ішінде компьютерді іске қосатын BIOS жазылған." },
+            { q: "Операциялық жүйенің негізгі функциясына не жатады?", options: ["Компьютер ресурстарын басқару және пайдаланушымен байланыс орнату", "Тек презентация жасау", "Антивирус жасау", "Компьютерді тазалау"], correct: 0, exp: "ОЖ — компьютер құрылғылары мен адам арасындағы көпір." },
+            { q: "Файл кеңейтілімі (.docx, .jpg, .mp3) не үшін қажет?", options: ["Файл көлемін азайту үшін", "Файлдың пішімін (типін) анықтау үшін", "Файлды құпиялау үшін", "Файлды өшіру үшін"], correct: 1, exp: "Кеңейтілім файлдың қандай типке жататынын көрсетеді." },
+            { q: "Интернеттегі агрессияға (кибербуллинг) тап болғанда ең дұрыс әрекет:", options: ["Балағат сөздермен жауап беру", "Ата-анаға немесе мұғалімге хабарлау, бұғаттау", "Компьютерді сындыру", "Парольді бәріне тарату"], correct: 1, exp: "Кибербуллинг кезінде үлкендерден көмек сұраған абзал." },
+            { q: "Сурет немесе графикалық файлдың кеңейтілімін тап:", options: [".png", ".mp3", ".txt", ".exe"], correct: 0, exp: ".png — бұл графикалық файл кеңейтілімі." }
+        ],
+        2: [
+            { q: "Ойынға тәуелділік (игромания) қандай кері салдарға әкеледі?", options: ["Денсаулық пен оқу үлгерімінің нашарлауы", "Ойлау қабілетінің 100% артуы", "Достардың көбеюі", "Көз көруінің жақсаруы"], correct: 0, exp: "Шексіз ойын ойнау физикалық және психикалық денсаулыққа зиян." },
+            { q: "Ақпарат дегеніміз не?", options: ["Өңделген, түсінікті әрі белгілі бір мәнге ие деректер", "Тек сандар жиынтығы", "Сигналдардың тоқтауы", "Дисплей экраны"], correct: 0, exp: "Ақпарат — өңделіп, белгілі бір мәнге ие болған дерек." },
+            { q: "Кэш-жадының (Cache memory) басты қызметі қандай?", options: ["Процессор мен жедел жады арасындағы жұмысты жылдамдату", "Файлдарды флешкаға жазу", "Экран сапасын арттыру", "Компьютерді сөндіру"], correct: 0, exp: "Кэш-жады процессордың жиі қолданатын деректерін аса жылдам береді." },
+            { q: "Файл атауында қолдануға БОЛМАЙТЫН таңбаларды көрсет:", options: ["A, B, C", "1, 2, 3", "/ \\ : * ? \" < > |", "_ - ( )"], correct: 2, exp: "Бұл арнайы резервтелген арнайы символдарды файл атында қолдануға болмайды." },
+            { q: "Орталық процессордың тактілік жиілігі немен өлшенеді?", options: ["Мегабайт (МБ)", "Герц (Гц, ГГц)", "Пиксель (px)", "Ватт (Вт)"], correct: 1, exp: "Тактілік жиілік ГЕРЦ (Гц, МГц, ГГц) өлшем бірлігімен өлшенеді." },
+            { q: "Сыртқы сақтау құрылғыларына не жатады?", options: ["Процессор ядросы", "Флеш-жады, сыртқы қатқыл диск (HDD/SSD)", "Аналық тақта", "Кэш-жады"], correct: 1, exp: "Флешка мен HDD/SSD — сыртқы тасымалдаушы сақтау құрылғылары." },
+            { q: "Деректерді өңдеп, шешім қабылдауда қолдану нәтижесі қалай аталады?", options: ["Білім (Knowledge)", "Файл", "Байланыс", "Софт"], correct: 0, exp: "Ақпаратты түсініп, қолдана алу нәтижесі — Білім болады." },
+            { q: "Бейнефайлдың (видео) кеңейтілімі қайсысы?", options: [".mp4", ".docx", ".jpg", ".sys"], correct: 0, exp: ".mp4 — ең кең таралған видео форматы." },
+            { q: "ЖИ бейнелерді тануды үйренуі үшін оған не беру керек?", options: ["Мыңдаған белгіленген суреттер (деректер)", "Тек компьютер кодын", "Дыбыстық колонка", "Музыкалық файл"], correct: 0, exp: "ЖИ-ді оқыту үшін сапалы белгіленген деректер қоры керек." },
+            { q: "Интернетте белгісіз сілтемелерге өту неге қауіпті?", options: ["Жеке деректер мен құпия сөздерді ұрлату қаупі бар", "Компьютер жылдам жұмыс істейді", "Интернет тегін болады", "Браузер жабылады"], correct: 0, exp: "Күмәнді сілтемелер Фишингтік (алаяқтық) сайттарға апаруы мүмкін." }
+        ],
+        3: [
+            { q: "Желіде белгісіз адамдардан келген күмәнді файлдарды (.exe) ашу неге қауіпті?", options: ["Вирус немесе зиянды бағдарлама жұғуы мүмкін", "Ойын тегін жүктеледі", "Компьютер жаңарып кетеді", "Бағдарлама өшеді"], correct: 0, exp: ".exe кеңейтілімі бар бейтаныс файлдарда вирустар жасырынуы мүмкін." },
+            { q: "Компьютер өшірілгенде қай жадыдағы деректер толық өшіріледі?", options: ["ROM (ТЖҚ)", "RAM (Жедел жады)", "Қатқыл диск (HDD)", "Флешка"], correct: 1, exp: "Жедел жады (RAM) тоқ өшкенде толығымен тазаланады." },
+            { q: "Музыкалық файлдардың кеңейтілімін көрсет:", options: [".mp3", ".png", ".pptx", ".exe"], correct: 0, exp: ".mp3 — дыбыстық және музыкалық файл кеңейтілімі." },
+            { q: "Жүйелік блоктың ішіндегі барлық құрылғыларды біріктіретін негізгі плата:", options: ["Аналық плата (Motherboard)", "Қуат блогы", "Дыбыс картасы", "Желілік карта"], correct: 0, exp: "Аналық плата барлық бөлшектерді біртұтас жүйеге біріктіреді." },
+            { q: "Жасанды интеллектте «деректердің рөлі» немен салыстырылады?", options: ["ЖИ-дің «жанармайы» немесе білім қорымен", "Монитор экранымен", "Компьютер тышқанымен", "Пернетақтамен"], correct: 0, exp: "Деректер — бұл ЖИ-ді оқытатын «жанармай»." },
+            { q: "Операциялық жүйеге жатпайтын бағдарламаны тап:", options: ["Windows", "Linux", "macOS", "Microsoft Word"], correct: 3, exp: "Microsoft Word — ОЖ емес, қолданбалы бағдарлама." },
+            { q: "Процессорда бір уақытта бірнеше тапсырманы қатар орындауға не мүмкіндік береді?", options: ["Процессордың ядролар саны", "Пернетақта түсі", "Монитор көлемі", "Тінтуір батырмасы"], correct: 0, exp: "Көп ядролы процессорлар тапсырмаларды қатар орындай алады." },
+            { q: "Ойынға тәуелділіктің алдын алудың ең тиімді жолы:", options: ["Күні бойы компьютер алдында отыру", "Экран уақытын шектеу және спортпен айналысу", "Достармен араласпау", "Түнде ойын ойнау"], correct: 1, exp: "Уақытты дұрыс жоспарлау және белсенді өмір салты тәуелділіктен сақтайды." },
+            { q: "«Деректер -> Ақпарат -> Білім» тізбегіне сәйкес дұрыс мысал:", options: ["'38' -> 'Дене температурасы 38°C' -> 'Адам ауырып тұр, дәрігерге бару керек'", "'Файл' -> 'Папка' -> 'Диск'", "'RAM' -> 'ROM' -> 'CPU'", "'Вирус' -> 'Сілтеме' -> 'Пароль'"], correct: 0, exp: "38 (дерек) -> 38°C (ақпарат) -> Адам ауырып тұр (білім мен шешім)." },
+            { q: "Мәтіндік файлдың кеңейтілімі қайсысы?", options: [".txt", ".mp4", ".png", ".zip"], correct: 0, exp: ".txt — ең қарапайым мәтіндік файл кеңейтілімі." }
+        ],
+        4: [
+            { q: "Желідегі агрессия (кибербуллинг) деген не?", options: ["Интернетте біреуді қорлау, қоқан-лоқы көрсету", "Компьютерлік ойын ойнау", "Достарға онлайн хат жазу", "Сабақ кестесін қарау"], correct: 0, exp: "Кибербуллинг — интернет арқылы адам психологиясына қысым жасау." },
+            { q: "Орындайтын (іске қосатын) бағдарламалардың кеңейтілімі қайсысы?", options: [".exe", ".jpg", ".txt", ".mp3"], correct: 0, exp: ".exe (executable) — программаларды іске қосатын файл." },
+            { q: "Пайдаланушы мен компьютер арасындағы диалогты не қамтамасыз етеді?", options: ["Операциялық жүйе интерфейсі", "Браузер", "Тек пернетақта", "Экран кабелі"], correct: 0, exp: "Операциялық жүйенің графикалық интерфейсі адамға компьютермен жұмыс істеуге мүмкіндік береді." },
+            { q: "ROM (Тұрақты сақтау құрылғысы) жадының ерекшелігі қандай?", options: ["Тек оқуға арналған және энергияға тәуелсіз", "Тек жазуға арналған", "Өте баяу", "Тоқ өшсе өшіп кетеді"], correct: 0, exp: "ROM — тоққа тәуелсіз, тек оқуға арналған жады." },
+            { q: "Компьютердің «миы» деп қай құрылғыны атайды?", options: ["Орталық процессор (CPU)", "Жедел жады (RAM)", "Монитор", "Кабель"], correct: 0, exp: "Процессор барлық есептеулерді орындайтын «ми» болып табылады." },
+            { q: "Қате немесе бұрмаланған деректермен оқытылған Жасанды интеллект қандай нәтиже береді?", options: ["Қате және бұрмаланған шешімдер шығарады", "Өте дәл жұмыс істейді", "Компьютер жанып кетеді", "Информатикадан 5 қояды"], correct: 0, exp: "Сапасыз деректермен оқытылған ЖИ қате шешім қабылдайды." },
+            { q: "Архивтелген (сығылған) файлдардың кеңейтілімі:", options: [".zip немесе .rar", ".docx", ".png", ".mp3"], correct: 0, exp: ".zip және .rar — сығылған архив файлдары." },
+            { q: "Файлдық жүйе дегеніміз не?", options: ["Дискіде файлдарды сақтау мен ұйымдастыру тәртібі", "Сурет салатын бағдарлама", "Компьютердің вирусы", "Интернет провайдері"], correct: 0, exp: "Файлдық жүйе файлдардың құрылымы мен орналасуын басқарады." },
+            { q: "Интернетте құпия сөзді (пароль) қалай ойлап тапқан дұрыс?", options: ["Әріптер, сандар және арнайы таңбалардан тұратын күрделі пароль", "Тек '123456'", "Өз атыңды қою", "Туған жылыңды қою"], correct: 0, exp: "Күрделі пароль аккаунтты бұзылудан қорғайды." },
+            { q: "Компьютердің ең жылдам, процессор ішінде орналасқан жады түрі:", options: ["Кэш-жады (Cache)", "Флешка", "Оптиқалық диск", "CD-ROM"], correct: 0, exp: "Кэш-жады ең жоғары жылдамдыққа ие." }
+        ],
+        5: [
+            { q: "Желілік алаяқтардан (фишингтен) сақтанудың алтын ережесі:", options: ["Жеке деректерді бейтаныс сайттарға енгізбеу", "Барлық сілтемені баса беру", "Банк картасын суретке түсіріп жіберу", "Парольді бәріне айту"], correct: 0, exp: "Жеке мәліметтерді ешқашан бөгде сайттарға енгізбеңіз!" },
+            { q: "Презентация файлының кеңейтілімін тап:", options: [".pptx", ".mp3", ".png", ".exe"], correct: 0, exp: ".pptx — MS PowerPoint презентация файлы." },
+            { q: "Компьютердің негізгі жады түрлерін ата:", options: ["Ішкі (RAM, ROM) және сыртқы (HDD, SSD, Flash)", "Тек монитор", "Тек процессор", "Кабельдер мен сымдар"], correct: 0, exp: "Компьютер жадысы ішкі және сыртқы болып екіге бөлінеді." },
+            { q: "Жасанды интеллект чат-ботының жауап бере алу себебі:", options: ["Үлкен көлемдегі деректер негізінде оқытылған", "Оның ішінде адам отыр", "Ол сізді көріп тұр", "Ол сиқырлы"], correct: 0, exp: "Чат-боттар миллиондаған мәтіндік деректерді талдау арқылы жауап береді." },
+            { q: "Операциялық жүйеде файлды іздеуді жеңілдету үшін не қолданылады?", options: ["Файлдарды бумаларға (папкаларға) жүйелеу", "Барлық файлды Рабочий столға шашу", "Файл атауын өшіру", "Дискіні пішімдеу"], correct: 0, exp: "Бумалар (папкалар) файлдарды реттеп сақтауға арналған." },
+            { q: "Тактілік жиілігі 3.2 ГГц процессор деген нені білдіреді?", options: ["Секундына 3.2 миллиард операция орындай алады", "Компьютер салмағы 3.2 кг", "Экран 3.2 дюйм", "Қуаты 3.2 Вольт"], correct: 0, exp: "1 ГГц = секундына 1 миллиард такт (миллиард операция)." },
+            { q: "Интернеттегі ойынға тәуелділіктің белгісі:", options: ["Сабақты уақытында оқу", "Уақыт сезімін жоғалту, ойынсыз ашулану, ұйқының бұзылуы", "Кітапты көп оқу", "Спортпен шұғылдану"], correct: 1, exp: "Ойынсыз тұра алмау және ашушаңдық — тәуелділіктің нақты белгісі." },
+            { q: "«6-сынып.txt» файлындағы «.txt» бөлігі не деп аталады?", options: ["Файл кеңейтілімі (расширение)", "Файлдың аты", "Папка аты", "Диск белгісі"], correct: 0, exp: "Нүктеден кейінгі әріптер — файл кеңейтілімі." },
+            { q: "Білім (Knowledge) дегеніміз не?", options: ["Ақпаратты түсіну, тәжірибеде қолдану және қорытынды жасау", "Кез келген сан", "Таңбалар жиыны", "Сканерленген сурет"], correct: 0, exp: "Білім — бұл ақпаратты сараптап, іс-жүзінде қолдану қабілеті." },
+            { q: "Операциялық жүйе жүктелмей тұрып, сақталған бағдарлама қайда орналасады?", options: ["ROM (BIOS)", "Жедел жады (RAM)", "Флешкада", "Интернетте"], correct: 0, exp: "BIOS микробағдарламасы ROM чипінде сақталады." }
+        ]
+    };
+
+    // ЭМОЦИЯЛАР ТІЗІМІ
+    const happyEmojis = ["🥳", "🎉", "😍", "👏", "⭐", "👍", "🔥"];
+    const sadEmojis = ["😢", "🤔", "❌", "😅", "💔", "🧐"];
+
+    let currentVariant = 1;
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOptionIndex = null;
+
+    function startQuiz(variant) {
+        currentVariant = variant;
+        currentQuestionIndex = 0;
+        score = 0;
+
+        document.getElementById("variant-screen").classList.add("hide");
+        document.getElementById("result-screen").style.display = "none";
+        document.getElementById("quiz-screen").classList.remove("hide");
+        document.getElementById("variant-title").innerText = `${variant}-нұсқа`;
+
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const questions = quizData[currentVariant];
+        const q = questions[currentQuestionIndex];
+
+        document.getElementById("question-count").innerText = `Сұрақ: ${currentQuestionIndex + 1}/${questions.length}`;
+        document.getElementById("progress-fill").style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+        document.getElementById("question-text").innerText = `${currentQuestionIndex + 1}. ${q.q}`;
+
+        const container = document.getElementById("options-container");
+        container.innerHTML = "";
+
+        // Жасыру
+        document.getElementById("feedback-box").style.display = "none";
+        document.getElementById("next-btn").style.display = "none";
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.innerText = `${String.fromCharCode(65 + idx)}) ${opt}`;
+            btn.onclick = () => selectOption(idx);
+            container.appendChild(btn);
+        });
+    }
+
+    function selectOption(index) {
+        const questions = quizData[currentVariant];
+        const q = questions[currentQuestionIndex];
+        const buttons = document.querySelectorAll(".option-btn");
+
+        buttons.forEach(btn => btn.disabled = true);
+
+        const feedbackBox = document.getElementById("feedback-box");
+        const feedbackEmoji = document.getElementById("feedback-emoji");
+        const feedbackTitle = document.getElementById("feedback-title");
+        const feedbackDesc = document.getElementById("feedback-desc");
+
+        if (index === q.correct) {
+            score++;
+            buttons[index].classList.add("correct");
+            
+            const randomEmoji = happyEmojis[Math.floor(Math.random() * happyEmojis.length)];
+            feedbackEmoji.innerText = randomEmoji;
+            feedbackTitle.innerText = "Бәрекелді! Өте дұрыс!";
+            feedbackTitle.style.color = "#065F46";
+            feedbackBox.style.backgroundColor = "#D1FAE5";
+            feedbackDesc.innerText = q.exp;
+        } else {
+            buttons[index].classList.add("wrong");
+            buttons[q.correct].classList.add("correct");
+
+            const randomEmoji = sadEmojis[Math.floor(Math.random() * sadEmojis.length)];
+            feedbackEmoji.innerText = randomEmoji;
+            feedbackTitle.innerText = "Қателестіңіз! Дұрыс жауап белгіленді.";
+            feedbackTitle.style.color = "#991B1B";
+            feedbackBox.style.backgroundColor = "#FEE2E2";
+            feedbackDesc.innerText = q.exp;
+        }
+
+        feedbackBox.style.display = "flex";
+        document.getElementById("next-btn").style.display = "block";
+    }
+
+    function nextQuestion() {
+        const questions = quizData[currentVariant];
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById("quiz-screen").classList.add("hide");
+        const resultScreen = document.getElementById("result-screen");
+        resultScreen.style.display = "block";
+
+        const questions = quizData[currentVariant];
+        const percent = Math.round((score / questions.length) * 100);
+
+        document.getElementById("score-text").innerText = `Сіз ${questions.length}-нан ${score} ұпай жинадыңыз (${percent}%)`;
+
+        const emojiEl = document.getElementById("result-emoji");
+        const badgeEl = document.getElementById("grade-badge");
+
+        if (percent >= 90) {
+            emojiEl.innerText = "🏆";
+            badgeEl.innerText = "Үздік нәтиже! 🌟 5-тік баға";
+            badgeEl.style.backgroundColor = "#D1FAE5";
+            badgeEl.style.color = "#065F46";
+        } else if (percent >= 70) {
+            emojiEl.innerText = "👍";
+            badgeEl.innerText = "Жақсы нәтиже! 👏 4-тік баға";
+            badgeEl.style.backgroundColor = "#DBEAFE";
+            badgeEl.style.color = "#1E40AF";
+        } else if (percent >= 50) {
+            emojiEl.innerText = "🙂";
+            badgeEl.innerText = "Қанағаттанарлық! 💪 3-тік баға";
+            badgeEl.style.backgroundColor = "#FEF3C7";
+            badgeEl.style.color = "#92400E";
+        } else {
+            emojiEl.innerText = "📚";
+            badgeEl.innerText = "Тағы да қайталап көр! 🔄";
+            badgeEl.style.backgroundColor = "#FEE2E2";
+            badgeEl.style.color = "#991B1B";
+        }
+    }
+
+    function restartCurrentVariant() {
+        startQuiz(currentVariant);
+    }
+
+    function showVariantScreen() {
+        document.getElementById("quiz-screen").classList.add("hide");
+        document.getElementById("result-screen").style.display = "none";
+        document.getElementById("variant-screen").classList.remove("hide");
+    }
+</script>
+
+</body>
+</html>
